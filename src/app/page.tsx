@@ -15,10 +15,12 @@ export default function Home() {
         <Logo/>
         <br/>
 
-        <Typography variant="h5">Submit the text you want, and MIX it until you get something new!</Typography>
+        <Typography sx={{ 
+          textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)' }} variant="h5">Submit the text you want, and MIX it until you get something new!</Typography>
+        <br/>
         <br/>
         <Grid display="flex" justifyContent="center">
-          <Button variant="contained" sx={{justifyContent: 'center'}} onClick={() => { router.push("/input") }}>
+          <Button size="large" variant="contained" sx={{justifyContent: 'center', padding: '14px 28px', fontSize: '1.2rem' }} onClick={() => { router.push("/input") }}>
           Create New Story
           </Button>
         </Grid>

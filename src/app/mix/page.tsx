@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Logo from "@/components/logo";
 import React, { useState, useEffect } from "react";
 import { Grid3x3Rounded } from "@mui/icons-material";
+import { mix } from "@/components/mix";
 
 
 export default function Home() {
@@ -13,11 +14,16 @@ export default function Home() {
     const router = useRouter();
     
     useEffect(()=> {
-        if (!text){
+        if (text === null || text === undefined){
             router.push("/input");
         }
         
-    },[text])
+    },[])
+
+    async function mixText(text: string) {
+        const mixed = await mix(text)
+        setText(mixed)
+    }
 
     return (
         <Box
@@ -26,15 +32,16 @@ export default function Home() {
         alignItems="center">
             <Grid spacing={2}>
                 <Logo/>
-                    <br/>
+                <br/>
+                <Typography fontWeight="bold">Your Mixed Story:</Typography>
                 <Container maxWidth="sm" sx={{ backgroundColor: 'whitesmoke', display: 'flex' }}>
                     <Typography variant="body1" gutterBottom >
-                        Mixed text: {text}
+                        {text}
                     </Typography>
                 </Container>
                 <Container>
                     <br/>
-                    <Button variant="contained" disabled={true} onClick={() => { setText(text) }}>
+                    <Button variant="contained" disabled={false} onClick={() => { mixText(text) }}>
                         ReMix!
                     </Button>
                     <Button variant="contained"  onClick={() => { router.push("/input") }}>

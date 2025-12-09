@@ -31,6 +31,7 @@ import { TextField, Button, Box, Grid } from "@mui/material";
 import { useTextContext } from "@/context/textContext";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/logo";
+import { mix } from "@/components/mix";
 
 export default function Input() {
   const router = useRouter();
@@ -39,8 +40,8 @@ export default function Input() {
   let canMix = userText ? false : true;
 
 
-  function mix (uText: string) {
-    setText(uText)
+  async function mixText (uText: string) {
+    setText( await mix(uText) )
     router.push("/mix");
   }
 
@@ -65,7 +66,7 @@ export default function Input() {
                 
             />
             
-            <Button variant="contained" disabled={canMix} sx={{justifyContent: 'center'}} onClick={() => { mix(userText) }}>
+            <Button variant="contained" disabled={canMix} sx={{justifyContent: 'center'}} onClick={() => { mixText(userText) }}>
             Mix!
             </Button>
       </Grid>
