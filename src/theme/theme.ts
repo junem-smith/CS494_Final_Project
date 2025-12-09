@@ -16,7 +16,6 @@ export const theme = createTheme({
     palette: {
         primary: {
             main: '#05A8AA',
-            dark: '#00212E',
             light: '#B8D5B8',
             contrastText: getContrastRatio('#05A8AA', '#fff') > 4.5 ? '#fff' : '#111',
         },
@@ -33,10 +32,13 @@ export const theme = createTheme({
             main: '#ffd166',
         },
         info: {
-            main: '#B8D5B8',
+            main: '#F6F5F0',
         },
         success: {
             main: '#118ab2',
+        },
+        background: {
+            default: '#B8D5B8',
         },
         
     },
@@ -69,5 +71,13 @@ export const theme = createTheme({
                 },
             },
         },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    
+                },
+            },
+        },
+        
     },
 })
