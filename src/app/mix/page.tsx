@@ -24,7 +24,6 @@ export default function Home() {
         if (!text || text.trim().length === 0) return;
         const mixed = await mix(text)
         setText(mixed)
-        console.log(text)
     }
 
     return (

@@ -43,7 +43,6 @@ export default function Input() {
   async function mixText () {
     setText( await mix(userText) )
     router.push("/mix");
-    console.log(text)
 
   }
 

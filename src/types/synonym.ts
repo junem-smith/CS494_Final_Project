@@ -1,7 +1,7 @@
 
 export type Word = {
     name: string,
-    syns: Synonym[]
+    syns: string[]
 }
 
 
@@ -10,58 +10,42 @@ export type Synonym = {
     synonym: string
 }
 
+
 export type RawSynonyms = {
     meta?: { id: string };
-    def?: {
-    sseq: [
-        [
-        "sense",
-        {
-            dt: (
-            | ["text", string]
-            | ["syn_list", { wd: string }[][]]
-            )[];
-        }
-        ]
-    ][];
-    }[];
+    syns: string[];
 }[];
 
-function extractSyns(data: any[]): string[] {
-    const syns: string[] = [];
 
-    if (!Array.isArray(data)) return syns;
+
+function extractSyns(data: any[]): RawSynonyms {
+    const rawSyns: RawSynonyms = [];
 
     for (const entry of data) {
-        if (typeof entry === "string") continue; // skip suggestion strings
-        for (const d of entry.def ?? []) {
-            for (const sseq of d.sseq ?? []) {
-                for (const sense of sseq) {
-                    const body = sense[1];
-                    for (const dt of body?.dt ?? []) {
-                        if (dt[0] === "syn_list") {
-                            for (const group of dt[1] ?? []) {
-                                for (const item of group ?? []) {
-                                    if (item?.wd) syns.push(item.wd);
-                                }
-                            }
-                        }
-                    }
-                }
+        const synSet = new Set<string>();
+
+        // Only include top-level meta.syns
+        for (const group of entry.meta?.syns ?? []) {
+            for (const word of group ?? []) {
+                if (word) synSet.add(word);
             }
+        }
+
+        if (synSet.size > 0) {
+            rawSyns.push({
+            meta: entry.meta ? { id: entry.meta.id } : undefined,
+            syns: Array.from(synSet)
+        });
         }
     }
 
-    return syns;
+    return rawSyns;
 }
 
 export function wordFromJson(name: string, data: any[]): Word {
     const rawSyns = extractSyns(data); 
+    const syns: string[] = rawSyns.flatMap(r => r.syns);
 
-    const syns: Synonym[] = rawSyns.map(s => ({
-        word: name,
-        synonym: s
-    }));
 
     return {
         name,

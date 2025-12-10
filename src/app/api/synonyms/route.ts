@@ -1,14 +1,23 @@
 "use server";
-import { type NextRequest } from "next/server";
-import { getSynonyms } from "@/lib/synonyms";
+import { NextRequest, NextResponse } from "next/server";
+import { Word, wordFromJson } from "@/types/synonym";
 
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
-    const query = searchParams.get('word') ?? ""
-    const synonyms = await getSynonyms(query)
-    return Response.json({ synonyms })
+    const word = searchParams.get("word") ?? "";
 
+    if (!word.trim()) {
+        return NextResponse.json([], { status: 200 });
+    }
+
+    const safe = encodeURIComponent( word.toLowerCase());
+    const url = `https://www.dictionaryapi.com/api/v3/references/thesaurus/json/${safe}?key=${process.env.API_KEY_THESAURUS}`;
+
+    const response = await fetch(url, { cache: "no-store" });
+    const raw = await response.json();
+
+    const wordObj = wordFromJson(word, raw);
+    return NextResponse.json(wordObj);
 }
 
-// process.env.API_KEY_DICTIONARY
