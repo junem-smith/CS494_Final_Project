@@ -1,6 +1,6 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
-import { Word, wordFromJson } from "@/types/synonym";
+import { wordFromJson } from "@/types/synonym";
 
 
 export async function GET(request: NextRequest) {

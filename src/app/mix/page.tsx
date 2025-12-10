@@ -1,11 +1,10 @@
 "use client";
 
 import { useTextContext } from "@/context/textContext";
-import { Box, Button, Grid, Link, Typography, Paper, Container } from "@mui/material";
+import { Box, Button, Grid, Typography, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/logo";
-import React, { useState, useEffect } from "react";
-import { Grid3x3Rounded } from "@mui/icons-material";
+import { useEffect } from "react";
 import { mix } from "@/components/mix";
 import Notes from "@/components/notes";
 

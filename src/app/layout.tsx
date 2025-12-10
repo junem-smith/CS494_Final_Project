@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { TextProvider } from "@/context/textContext";
-import { wordFromJson } from "@/types/synonym";
 import { AppThemeProvider } from "@/theme/themeProvider";
 
 
