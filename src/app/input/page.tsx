@@ -40,15 +40,17 @@ export default function Input() {
   let canMix = userText ? false : true;
 
 
-  async function mixText (uText: string) {
-    setText( await mix(uText) )
+  async function mixText () {
+    setText( await mix(userText) )
     router.push("/mix");
+    console.log(text)
+
   }
 
   return (
     <Box display="flex"
-  justifyContent="center"
-  alignItems="center">
+    justifyContent="center"
+    alignItems="center">
         <Grid spacing={2}>
             <Logo/>
             <br/>
@@ -66,7 +68,7 @@ export default function Input() {
                 
             />
             
-            <Button variant="contained" disabled={canMix} sx={{justifyContent: 'center'}} onClick={() => { mixText(userText) }}>
+            <Button variant="contained" disabled={canMix} sx={{justifyContent: 'center'}} onClick={() => { mixText() }}>
             Mix!
             </Button>
       </Grid>

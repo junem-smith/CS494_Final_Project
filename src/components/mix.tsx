@@ -1,4 +1,4 @@
-
+"use client";
 
 export async function mix (text: string) {
     let newText = text;
@@ -19,28 +19,50 @@ export async function mix (text: string) {
  * 
  * @param text 
  */
-async function replace_random_word (text: string) {
-    let temp = text.split(" ");
-    const rand = Math.floor(Math.random() * temp.length);
+async function replace_random_word(text: string) {
+    let words = text.split(" ");
+    const rand = Math.floor(Math.random() * words.length);
 
-    let word = temp[rand];
-    const char = containsSpecialCharacter(word);
+    const token = words[rand];
 
-    const word1 = char ? word.replace(char, "") : word;
-
-    const res = await fetch(`/api/synonyms?word=${word}`);
-    const { synonyms } = await res.json();
-    const syns = synonyms.syns;
-    if (syns.length == 0) return text;
-
-
-    let syn = syns[Math.floor(Math.random() * syns.length)].synonym;
-
-    const newWord = syn + (char ?? "");
+    // In case of special characters like punctuation.
+    const { before, core, after } = splitWord(token);
     
-    temp[rand] = newWord;
+    if (!core || core.trim().length === 0) return text;
 
-    return temp.join(" ");
+    
+    const res = await fetch(`/api/synonyms?word=${encodeURIComponent(core)}`);
+    if (!res.ok) {
+    console.error("Failed to fetch synonyms for:", core);
+    return text;
+}
+
+    const { synonyms } = await res.json();
+    const syns = Array.isArray(synonyms.syns) ? synonyms.syns : [];
+
+    if (syns.length === 0) return text;
+
+    const syn = syns[Math.floor(Math.random() * syns.length)].synonym;
+
+    // Reassemble the token
+    const newToken = before + syn + after;
+    words[rand] = newToken;
+
+    return words.join(" ");
+}
+
+function splitWord(token: string) {
+    const match = token.match(/^([^a-zA-Z0-9]*)([a-zA-Z0-9]+)([^a-zA-Z0-9]*)$/);
+
+    if (!match) {
+        return { before: "", core: token, after: "" };
+    }
+
+    return {
+        before: match[1],
+        core: match[2],
+        after: match[3],
+    };
 }
 
 function containsSpecialCharacter(str: string) {

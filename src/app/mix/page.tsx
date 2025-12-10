@@ -14,15 +14,17 @@ export default function Home() {
     const router = useRouter();
     
     useEffect(()=> {
-        if (text === null || text === undefined){
+        if (text == null || text == undefined || text == ""){
             router.push("/input");
         }
         
     },[])
 
-    async function mixText(text: string) {
+    async function mixText() {
+        if (!text || text.trim().length === 0) return;
         const mixed = await mix(text)
         setText(mixed)
+        console.log(text)
     }
 
     return (
@@ -41,7 +43,7 @@ export default function Home() {
                 </Container>
                 <Container>
                     <br/>
-                    <Button variant="contained" disabled={false} onClick={() => { mixText(text) }}>
+                    <Button variant="contained" disabled={!text || text.trim().length === 0} onClick={() => { mixText() }}>
                         ReMix!
                     </Button>
                     <Button variant="contained"  onClick={() => { router.push("/input") }}>
